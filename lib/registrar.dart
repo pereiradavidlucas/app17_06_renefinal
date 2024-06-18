@@ -1,88 +1,53 @@
-import 'package:app17_06_renefinal/ButtonState.dart';
-import 'package:app17_06_renefinal/Perfil.dart';
+// lib/screens/registrar.dart
+import 'package:app17_06_renefinal/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Registrar extends StatefulWidget {
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _RegistrarState createState() => _RegistrarState();
 }
 
-class _RegisterScreenState extends State<Registrar> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != _selectedDate)
-      setState(() {
-        _selectedDate = picked;
-      });
-  }
+class _RegistrarState extends State<Registrar> {
+  final AuthService _authService = AuthService();
+  String _email = '';
+  String _password = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cadastrar ')),
+      appBar: AppBar(
+        title: Text('Registrar'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nome:',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: 'Email'),
+              onChanged: (value) {
+                setState(() {
+                  _email = value;
+                });
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email:',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Text(
-                  'Data de nascimento : ${_selectedDate.toLocal()}'
-                      .split(' ')[0],
-                ),
-                IconButton(
-                  onPressed: () => _selectDate(context),
-                  icon: Icon(Icons.calendar_today),
-                ),
-              ],
+            TextField(
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+              onChanged: (value) {
+                setState(() {
+                  _password = value;
+                });
+              },
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Provider.of<ButtonState>(context, listen: false).setUserProfile(
-                  _nameController.text,
-                  _emailController.text,
-                  _selectedDate,
-                );
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Perfil()));
+              onPressed: () async {
+                var user = await _authService.register(_email, _password);
+                if (user != null) {
+                  Navigator.pop(context);
+                }
               },
-              child: Text('Cadastrar'),
-            ),
-            ElevatedButton(
-              onPressed: null,
-              child: Text('Google'),
+              child: Text('Registrar'),
             ),
           ],
         ),

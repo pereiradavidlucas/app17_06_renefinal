@@ -1,5 +1,5 @@
-import 'package:app17_06_renefinal/ButtonState.dart';
-import 'package:app17_06_renefinal/main.dart';
+import 'package:app17_06_renefinal/modelos/ButtonState.dart';
+import 'package:app17_06_renefinal/paginaInicial.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +32,7 @@ class Perfil extends StatelessWidget {
             color: Color.fromARGB(255, 241, 241, 241),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()));
+                  MaterialPageRoute(builder: (context) => Paginainicial()));
             },
           ),
         ],
